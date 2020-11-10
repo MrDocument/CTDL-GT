@@ -25,4 +25,5 @@ static int binarySearch(int[] array, int x)
             Console.WriteLine("Không tìm thấy x");
             //neu khong tim thay phan tu nao thi tra kq ve -1
             return -1;
+            //OK
         }
