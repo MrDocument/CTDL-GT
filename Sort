@@ -1,0 +1,318 @@
+class Radix_Sort
+    {
+        public static int getMax(int[] arr,int n)
+        {
+            int max = arr[0];
+            for (int i = 1; i < n; i++)
+            {
+                if(arr[i]>max)
+                {
+                    max = arr[i];
+                }
+            }
+            return max;
+        }
+        public static void countSort(int[] arr,int n,int exp)
+        {
+            int[] output = new int[n];//output array
+            int i;
+            int[] count = new int[10];
+
+            for (i = 0; i < 10; i++)
+                count[i] = 0;
+
+            //luu tru so lan xuat hien trong mang count
+            for (i = 0; i < n; i++)
+            {
+                count[(arr[i] / exp) % 10]++;               
+            }
+            //change count[i] so that count[i] now
+            //contains actual position of this
+            //digit in output[]
+
+            for (i = 1; i < 10; i++)
+            {
+                count[i] += count[i - 1];
+            }
+            //build the output array
+            for (i = n-1; i>=0; i--)
+            {
+                output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+                count[(arr[i] / exp) % 10]--;
+            }
+
+            //copy the output array to arr[], so that arr[]
+            //now contains sorted numbers according to current
+            //digit
+            for ( i = 0; i < n; i++)
+            {
+                arr[i] = output[i];
+            }
+        }
+        public static void radixSort(int[] arr,int n)
+        {
+            //find the maximum number to know number of digits
+            int m = getMax(arr, n);
+
+            //do counting sort for every digit. Note that
+            //instead of passing digit number, exp is passed.
+            //exp is 10^i where i is current digit number
+
+            for (int exp = 1; m / exp > 0; exp*=10)
+            {
+                countSort(arr, n, exp);
+            }
+        }
+    }
+    
+    //Merge Sort
+    class Merge_Sort
+    {
+        public static void merge(int[] arr, int l, int m, int r)
+        {
+            //find sizes of two
+            //subarrays to be merged
+            int n1 = m - l + 1;
+            int n2 = r - m;
+
+            //Create temp arrays
+            int[] L = new int[n1];
+            int[] R = new int[n2];
+            int i, j;
+
+            //copy data to temp arrays
+            for (i = 0; i < n1; ++i)
+            {
+                L[i] = arr[l + i];
+            }
+            for (j = 0; j < n2; ++j)
+            {
+                R[j] = arr[m + 1 + j];
+            }
+            //merge the temp arrays
+
+            //Initial indexes of first
+            //and second subarrays
+            i = 0;
+            j = 0;
+
+            //Initial index of merged
+            //subarray array
+            int k = l;
+            while (i < n1 && j < n2)
+            {
+                if (L[i] <= R[j])
+                {
+                    arr[k] = L[i];
+                    i++;
+                }
+                else
+                {
+                    arr[k] = R[j];
+                    j++;
+                }
+                k++;
+            }
+            // Copy remaining elements
+            // of L[] if any
+
+            while (i < n1)
+            {
+                arr[k] = L[i];
+                i++;
+                k++;
+            }
+
+            // Copy remaining elements
+            // of R[] if any
+            while (j < n2)
+            {
+                arr[k] = R[j];
+                j++;
+                k++;
+            }
+        }
+        public static void sort(int[] arr, int l, int r)
+        {
+            if (l < r)
+            {
+                //find the middle
+                //point
+
+                int m = (l + r) / 2;
+
+                //sort first and second halves
+                sort(arr, l, m);
+                sort(arr, m + 1, r);
+
+                //merge the sorted halves
+                merge(arr, l, m, r);
+            }
+        }
+
+    }
+    
+    //Heap Sort
+    class Heap_Sort
+    {
+        public static void heapify(int[] arr,int n, int i)
+        {
+            int largest = i;
+            int left = 2 * i + 1;
+            int right = 2 * i + 2;
+
+            //neu left child ma lon hon Root
+            if (left < n && arr[left] > arr[largest])
+            {
+                largest = left;
+            }
+            //neu right child ma lon hon so lon nhat
+            if (right < n && arr[right] > arr[largest])
+            {
+                largest = right;
+            }
+            //neu con lon nhat khong phai root
+            if (largest != i) 
+            {
+                int temp = arr[i];
+                arr[i] = arr[largest];
+                arr[largest] = temp;
+
+                heapify(arr, n, largest);
+            }
+        }
+        public static void sort(int[] arr)
+        {
+            int n = arr.Length;
+
+            //Build heap (rearrange array)
+            for (int i = n/2 - 1; i >= 0; i--)
+            {
+                heapify(arr, n, i);
+            }
+            //trich xuat tung phan tu tu heap
+            for (int i = n-1; i >0; i--)
+            {
+                //di chuyen root hien tai den vi tri cuoi
+                int temp = arr[0];
+                arr[0] = arr[i];
+                arr[i] = temp;
+
+                //call max heapify on the reduced heap
+                heapify(arr, i, 0);
+            }
+        }
+    }
+    
+    //Quick Sort
+    class Quick_Sort
+    {
+        /*Hàm này nhận phần tử cuối cùng làm trục, 
+         * đặt phần tử trục vào đúng vị trí của nó vị trí trong mảng đã sắp xếp 
+         * và đặt tất cả nhỏ hơn(nhỏ hơn trục) ở bên trái của trục và 
+         * tất cả các phần tử lớn hơn sang phải trong tổng số trục*/
+        public static int partition(int[] arr,int first, int last)//ham phan manh
+        {
+            int pivot = arr[last];
+
+            //chi muc cua phan tu nho nhat
+            int i = (first - 1);
+            for (int j = first; j < last; j++)
+            {
+                //neu phan tu con nho hon pivot
+                if(arr[j]<pivot)
+                {
+                    i++;
+
+                    //swap arr[i] and arr[j]
+                    int temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
+                }
+            }
+            //hoan vi arr[i+1] va arr[high] (hoac pivot)
+            int temp1 = arr[i + 1];
+            arr[i + 1] = arr[last];
+            arr[last] = temp1;
+
+            return i + 1;
+        
+        }
+        /* The main function that implements QuickSort() 
+          arr[] --> Array to be sorted, 
+          low --> Starting index, 
+          high --> Ending index */
+        public static void quickSort(int[] arr,int first,int last)
+        {
+            if(first < last)
+            {
+                /*pi là chỉ mục phân vùng, arr[pi] là bây giờ ở đúng nơi*/
+                int pivotIndex = partition(arr, first,last);
+
+                quickSort(arr, first, pivotIndex - 1);
+                quickSort(arr, pivotIndex + 1, last);
+            }
+        }
+
+        public static void QuickSort(int[] a, int first,int last)
+        {
+            if (first >= last)
+                return;
+            //Chon pivot
+            int pivotIndex = first;
+            //phan hoach a thanh s1 hoac s2
+            int lastS1 = first;
+            int firstUnknown = first + 1;
+            int temp;
+            while(firstUnknown<=last)
+            {
+                if (a[firstUnknown] < a[pivotIndex])
+                {
+                    temp = a[firstUnknown];
+                    a[firstUnknown] = a[lastS1 + 1];
+                    a[lastS1 + 1] = temp;
+                    lastS1 += 1;
+                }
+                firstUnknown += 1;
+            }
+            //dua pivot ve dung vi tri
+            temp = a[lastS1];
+            a[lastS1] = a[pivotIndex];
+            a[pivotIndex] = temp;
+            pivotIndex = lastS1;
+            lastS1 -= 1;
+
+            QuickSort(a, first, pivotIndex - 1);
+            QuickSort(a, pivotIndex + 1, last);
+
+        }
+    }
+    
+    //selection sort
+    class Selection_Sort
+    {
+        public static void selectionSort(int[] a)
+        {
+            int n = a.Length;
+            for (int i = 0; i < n; i++)
+            {
+                // di tim phan tu nho nhat
+                int minIndex = i;
+                for (int j = i; j < n; j++)
+                {
+                    if (a[minIndex] > a[j])
+                    {
+                        minIndex = j;
+                    }
+                }
+
+                if (minIndex != i)
+                {
+                    int temp = a[minIndex];
+                    a[minIndex] = a[i];
+                    a[i] = temp;
+                }
+            }
+        }
+    }
+    
