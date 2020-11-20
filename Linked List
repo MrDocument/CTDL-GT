@@ -1,0 +1,63 @@
+public class Node
+    {
+        private int value;
+        public Node next;
+
+        public Node()
+        {
+            value = 0;
+            next = null;
+        }
+        public Node(int a_value)
+        {
+            value = a_value;
+            next = null;
+        }
+        //Them 1 phan tu co gia tri a_value vao 
+        //sau phan tu hien tai
+        public void AddNode(int a_value)
+        {
+            Node newNode = new Node(a_value);
+            this.next = newNode;
+        }
+    }
+    public class Linked_List
+    {
+        private Node head;
+        private Node tail;
+        public void LinkedList()
+        {
+            head = null;
+            tail = null;
+        }
+        public void AddHead(int a_value)
+        {
+            Node newNode = new Node(a_value);
+            if (head == null)
+            {
+                head = newNode;
+                tail = newNode;
+            }
+            else
+            {
+                newNode.next = head;
+                head = newNode;
+            }
+        }
+        public void AddTail(int a_value)
+        {
+            Node newNode = new Node(a_value);
+            if (head == null)
+            {
+
+                head = newNode;
+                tail = newNode;
+            }
+            else
+            {
+                tail.next = newNode;
+                tail = newNode;
+
+            }
+        }
+    }
